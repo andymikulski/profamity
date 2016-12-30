@@ -1,3 +1,5 @@
+
+var ClosureCompiler = require('google-closure-compiler-js').webpack;
 var webpack = require('webpack');
 
 var config = {

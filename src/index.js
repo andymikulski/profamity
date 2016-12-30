@@ -1,6 +1,6 @@
 import { readFile } from 'fs';
 import { normalize, resolve } from 'path';
-import { forEach } from 'async';
+import { eachLimit } from 'async';
 import atob from 'atob';
 
 import glob from 'glob';
@@ -9,11 +9,24 @@ import 'colors';
 import wordList from './words.json';
 import makeRegex from './makeRegex.js';
 
+const atobIfNeeded = (word)=>{
+  let convertedWord;
+  try {
+    convertedWord = atob(word);
+  } catch(e) {
+    convertedWord = word;
+  }
+
+  return convertedWord;
+};
+
+const ProfanityError = Error;
+
 const badWords = wordList
   // words are stored btoa'd to prevent having a list of profanity
   // inside a source directory, so we have to atob them back before
   // regexing.
-  .map(atob)
+  .map(atobIfNeeded)
   // sort alphabetically, just cause
   .sort()
   // create the actual regexs to use later
@@ -23,6 +36,8 @@ const commandLineArgs = require('command-line-args')
 const options = commandLineArgs([
   { name: 'input', alias: 'i' },
   { name: 'verbose', alias: 'v' },
+  { name: 'ignore' },
+  { name: 'throw', alias: 't' },
 ]);
 
 if (!options || !options.input) {
@@ -30,17 +45,26 @@ if (!options || !options.input) {
 }
 
 const cwd = process.cwd();
-// displays 'ProfanityError' in console when it fails
-const ProfanityError = Error;
+const fileLimit = 10;
+
+const userIgnore = options.exclude || options.ignore;
+const ignoreOption = ['node_modules/**/*.*'];
+
+if (userIgnore){
+  ignoreOption.push(userIgnore);
+}
 
 // searches nested folders
-glob(options.input, function(er, files) {
+glob(options.input, {
+  ignore: ignoreOption,
+  nodir: true,
+}, function(er, files) {
   const detected = {};
 
-  forEach(files, (fileName, cb) => {
+  eachLimit(files, fileLimit, (fileName, cb) => {
     readFile(resolve(cwd, fileName), 'utf-8', function(err, content) {
       if (err) {
-        throw new Error(err);
+        throw new Error(JSON.stringify(err));
         return;
       }
 
@@ -80,7 +104,12 @@ glob(options.input, function(er, files) {
           console.log(problems);
         });
       });
-      throw new ProfanityError();
+
+      // if user wants to throw an error if linting fails,
+      // do so here
+      if (options.throw) {
+        throw new ProfanityError();
+      }
     } else {
       console.log('✓ No profanity!'.green.bold)
     }

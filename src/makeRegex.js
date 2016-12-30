@@ -1,6 +1,10 @@
 import letterMap from './letters.json';
 
 export default function makeRegex(sourceWord) {
+  if (!sourceWord) {
+    throw new Error(`makeRegex was given a null sourceWord: ${sourceWord}`);
+  }
+
   // opening word boundary
   let regWord = '\\b';
 
@@ -25,9 +29,15 @@ export default function makeRegex(sourceWord) {
     regWord += letterRegex + '+';
   }
 
+  // -ed
+  regWord += '(e+d+)?';
+  // -er
   regWord += '(e+r+)?';
+  // -s
   regWord += '(s+)?';
+  // -y
   regWord += '(y+)?';
+  // -ing
   regWord += '((i+n+)?(g+)?)';
 
   // ending word boundary

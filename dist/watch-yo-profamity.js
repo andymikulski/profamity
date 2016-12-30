@@ -82,35 +82,57 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	var atobIfNeeded = function atobIfNeeded(word) {
+	  var convertedWord = void 0;
+	  try {
+	    convertedWord = (0, _atob2.default)(word);
+	  } catch (e) {
+	    convertedWord = word;
+	  }
+
+	  return convertedWord;
+	};
+
+	var ProfanityError = Error;
+
 	var badWords = _words2.default
 	// words are stored btoa'd to prevent having a list of profanity
 	// inside a source directory, so we have to atob them back before
 	// regexing.
-	.map(_atob2.default)
+	.map(atobIfNeeded)
 	// sort alphabetically, just cause
 	.sort()
 	// create the actual regexs to use later
 	.map(_makeRegex2.default);
 
 	var commandLineArgs = __webpack_require__(78);
-	var options = commandLineArgs([{ name: 'input', alias: 'i' }, { name: 'verbose', alias: 'v' }]);
+	var options = commandLineArgs([{ name: 'input', alias: 'i' }, { name: 'verbose', alias: 'v' }, { name: 'ignore' }, { name: 'throw', alias: 't' }]);
 
 	if (!options || !options.input) {
 	  throw new Error('Input file(s) required!');
 	}
 
 	var cwd = process.cwd();
-	// displays 'ProfanityError' in console when it fails
-	var ProfanityError = Error;
+	var fileLimit = 10;
+
+	var userIgnore = options.exclude || options.ignore;
+	var ignoreOption = ['node_modules/**/*.*'];
+
+	if (userIgnore) {
+	  ignoreOption.push(userIgnore);
+	}
 
 	// searches nested folders
-	(0, _glob2.default)(options.input, function (er, files) {
+	(0, _glob2.default)(options.input, {
+	  ignore: ignoreOption,
+	  nodir: true
+	}, function (er, files) {
 	  var detected = {};
 
-	  (0, _async.forEach)(files, function (fileName, cb) {
+	  (0, _async.eachLimit)(files, fileLimit, function (fileName, cb) {
 	    (0, _fs.readFile)((0, _path.resolve)(cwd, fileName), 'utf-8', function (err, content) {
 	      if (err) {
-	        throw new Error(err);
+	        throw new Error(JSON.stringify(err));
 	        return;
 	      }
 
@@ -148,7 +170,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	          console.log(problems);
 	        });
 	      });
-	      throw new ProfanityError();
+
+	      // if user wants to throw an error if linting fails,
+	      // do so here
+	      if (options.throw) {
+	        throw new ProfanityError();
+	      }
 	    } else {
 	      console.log('✓ No profanity!'.green.bold);
 	    }
@@ -9474,6 +9501,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function makeRegex(sourceWord) {
+	  if (!sourceWord) {
+	    throw new Error('makeRegex was given a null sourceWord: ' + sourceWord);
+	  }
+
 	  // opening word boundary
 	  var regWord = '\\b';
 
@@ -9498,9 +9529,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    regWord += letterRegex + '+';
 	  }
 
+	  // -ed
+	  regWord += '(e+d+)?';
+	  // -er
 	  regWord += '(e+r+)?';
+	  // -s
 	  regWord += '(s+)?';
+	  // -y
 	  regWord += '(y+)?';
+	  // -ing
 	  regWord += '((i+n+)?(g+)?)';
 
 	  // ending word boundary
@@ -12892,13 +12929,21 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports) {
 
 	module.exports = [
-		"d3Rm",
-		"c2hpdA==",
-		"ZnVjaw==",
-		"cGlzcw==",
-		"YmFsbHM=",
-		"c2V4",
-		"ZGljaw=="
+		"balls",
+		"dick",
+		"fuck",
+		"piss",
+		"sex",
+		"shit",
+		"wtf",
+		"hell",
+		"damn",
+		"cunt",
+		"cock",
+		"cocksuck",
+		"motherfuck",
+		"tit",
+		"ass"
 	];
 
 /***/ },
