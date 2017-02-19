@@ -7,13 +7,23 @@ export default function makeRegex(sourceWord) {
 
   // opening word boundary
   let regWord = '\\b';
+  const symbols = ['.', '?', '\\', '*'];
 
   // for each letter...
   for (let i = 0; i < sourceWord.length; i++) {
     const actualLetter = sourceWord[i];
 
     // add it to the regex (or escape if necessary)
-    let letterRegex = '(' + (actualLetter === '?' ? '\?' : actualLetter);
+    let letterRegex = '(';
+
+    // if the letter is also a regex symbol,
+    // we need to escape it
+    if (symbols.indexOf(actualLetter) > -1){
+      letterRegex = `${letterRegex}\\${actualLetter}`;
+    }else {
+      // otherwise we just add the thing to the thing.
+      letterRegex = `${letterRegex}${actualLetter}`;
+    }
 
     // if there are alternatives to this letter
     // (e.g. 1 for l or I, 3 for e, etc)
@@ -30,17 +40,17 @@ export default function makeRegex(sourceWord) {
   }
 
   // -ed
-  regWord += '(e+d+)?';
+  regWord += '(e+)?(d+)?';
   // -er
-  regWord += '(e+r+)?';
+  regWord += '(e+)?(r+)?';
   // -s
   regWord += '(s+)?';
   // -y
   regWord += '(y+)?';
   // -ing
-  regWord += '((i+n+)?(g+)?)';
+  regWord += '(i+)?(n+)?(g+)?';
 
   // ending word boundary
   regWord += '\\b';
-  return new RegExp(regWord, 'im');
+  return new RegExp(regWord, 'igm');
 }

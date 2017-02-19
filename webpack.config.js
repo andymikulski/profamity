@@ -1,25 +1,22 @@
-
-var ClosureCompiler = require('google-closure-compiler-js').webpack;
 var webpack = require('webpack');
 
 var config = {
   target: 'node',
   module: {
     loaders: [
-      { test: /\.js$/, loaders: ['babel-loader'], exclude: /node_modules/ },
+      { test: /\.js$/, loaders: ['babel-loader'] },
       { test: /\.json$/, loaders: ['json-loader'], exclude: /node_modules/ }
     ]
   },
   output: {
-    library: 'watch-yo-profamity',
+    library: 'profamity',
     libraryTarget: 'umd'
   },
   plugins: [
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-    })
+    }),
   ],
   node: {
     fs: 'empty'
