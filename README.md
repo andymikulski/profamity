@@ -1,5 +1,6 @@
 # Profamity.js
 [Watch yo profamity](https://www.youtube.com/watch?v=hpigjnKl7nI)
+
 ![Watch yo profamity](profamity.jpg)
 
 ## About
@@ -9,9 +10,11 @@ Profanity linter. Uses a built-in list of profane words, or you can provide your
 ## Getting Started
 
 For general linting locally
+
 `npm install profamity -g`
 
 For use with project linting (or as use in an `npm` script)
+
 `npm install profamity --save-dev`
 
 ## Examples
@@ -19,15 +22,19 @@ For use with project linting (or as use in an `npm` script)
 ### Command Line
 
 Search current working directory (and all nested dirs)
+
 `profamity`
 
 Search current working directory (shallow)
+
 `profamity -i *.*`
 
 Search a nested directory (shallow)
+
 `profamity -i ./path/to/dir/*.*`
 
-Search a file for a set of words (here, `console.log` and `todo`):
+Search a file for a set of words (here, `console.log` and `todo`)
+
 `profamity -i ./docs/README.md -w console.log todo`
 
 
@@ -37,7 +44,9 @@ Search a file for a set of words (here, `console.log` and `todo`):
 [Glob pattern](https://github.com/isaacs/node-glob) of files to process.
 
 Examples:
+
 `... --input ./README.md ...`
+
 ` ... -i assets/**/*.+(js|css) ...`
 
 ---
@@ -46,7 +55,9 @@ Examples:
 List of words to search for.
 
 Examples:
+
 `... --words console.log ...`
+
 `... -w this that the-other ...`
 
 ---
@@ -58,7 +69,9 @@ _**NOTE:** `node_modules/**/*.*` is always excluded and does not need to be excl
 _**NOTE:** Binary file formats are always excluded (`jpg`, `gif`, `zip`, etc)._
 
 Examples:
+
 `... --exclude assets/**/*.* ...`
+
 `... --exclude src/*.* assets/**/*.* ...`
 
 ---
