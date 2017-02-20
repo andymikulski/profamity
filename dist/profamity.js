@@ -115,7 +115,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  description: 'List of words to search for.',
 	  multiple: true
 	}, {
-	  name: 'ignore',
+	  name: 'exclude',
 	  alias: 'x',
 	  typeLabel: '[underline]{files}',
 	  description: 'Glob pattern of files to exclude.',
