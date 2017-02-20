@@ -91,14 +91,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var commandLineArgs = __webpack_require__(39);
 	var commandLineGuide = __webpack_require__(44);
 
-	var atobMaybe = function atobMaybe(input) {
-	  try {
-	    return (0, _atob2.default)(input);
-	  } catch (e) {
-	    return input;
-	  }
-	};
-
 	var ProfanityError = Error;
 	var log = console.log;
 

@@ -9,11 +9,13 @@ var file = path.resolve(__dirname, './src/words.json');
 var wordList = jsonfile.readFileSync(file);
 
 
-var options = commandLineArgs([
-  { name: 'encode', alias: 'e' },
-]);
+var options = commandLineArgs([{
+	name: 'encode',
+	alias: 'e',
+	type: Boolean,
+}]);
 
-function convertIfNeeded(encode) {
+function convert(encode) {
 	return function(word) {
 		var convertedWord;
 
@@ -27,13 +29,13 @@ function convertIfNeeded(encode) {
 	};
 }
 
-var isEncoding = !!options.encode;
+var isEncoding = options.encode;
 
 var newWords = wordList
-	.map(convertIfNeeded(isEncoding))
+	.map(convert(isEncoding))
 	// sort alphabetically, just cause
 	.sort();
 
 jsonfile.writeFile(file, newWords, function(err) {
-	console.error(err);
+	console.error(err || `${isEncoding}`);
 });

@@ -7,11 +7,6 @@ const commandLineGuide = require('command-line-usage');
 import btoa from 'btoa';
 import atob from 'atob';
 
-const atobMaybe = (input)=>{
-  try { return atob(input); }
-  catch(e) { return input; }
-}
-
 import glob from 'glob';
 import chalk from 'chalk';
 

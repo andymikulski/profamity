@@ -1,14 +1,14 @@
 {
   "name": "profamity",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Profanity linter",
   "bin": {
-    "profamity": "./dist/profamity.min.js"
+    "profamity": "node ./dist/profamity.min.js"
   },
   "main": "lib/index.js",
   "scripts": {
-    "dev:words": "node convertWords.js",
-    "build:words": "node convertWords.js -e",
+    "decrypt": "node convertWords.js",
+    "encrypt": "node convertWords.js -e",
     "build": "babel src --out-dir lib",
     "build:umd": "webpack src/index.js dist/profamity.js",
     "build:umd:min": "cross-env NODE_ENV=production webpack src/index.js dist/profamity.min.js",
