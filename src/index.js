@@ -87,7 +87,7 @@ const commandLineOptions = [{
   const userIgnore = options.exclude || options.ignore;
   let ignoreOption = [
     'node_modules/**/*.*',
-    '**/*.+(jpe?g|gif|zip|dmg|exe|otf|ttf)'
+    '**/*.+(jpe?g|gif|zip|dmg|exe|otf|ttf|eot|woff|svg|pyc)'
   ];
 
   if (userIgnore){

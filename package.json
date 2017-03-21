@@ -1,9 +1,11 @@
 {
   "name": "profamity",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Profanity linter",
-  "bin": "./dist/profamity.js",
-  "main": "lib/index.js",
+  "bin": {
+    "profamity": "bin/cli.js"
+  },
+  "main": "dist/profamity.js",
   "scripts": {
     "decrypt": "node convertWords.js",
     "encrypt": "node convertWords.js -e",
